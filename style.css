@@ -1,0 +1,137 @@
+@import url(reset.css);
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+
+:root{
+  --pastel-blue: #D4DEFF;
+  --ligh-blue: #849FFF;
+  --library-blue: #2A59FD;
+  --shadow-blue: #1F3DA6;
+  --dark-blue: #0A1641;
+}
+html{
+  background: var(--pastel-blue);
+}
+*{
+  font-family: 'Montserrat', sans-serif;
+}
+.container{
+  display: grid;
+  grid-template: 1fr / 1fr;
+}
+section.game-board{
+  margin: 50px;
+  padding: 30px;
+  background: #fff;
+  box-shadow: 0px 2px 10px -4px rgba(31, 61, 166, .6);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+#gameBoard{
+  background: #fff;
+  display: grid;
+  grid-template: 250px 250px 250px / 250px 250px 250px;
+  width: 100%;
+  justify-content: center;
+}
+div.case{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14em;
+  font-weight: 900;
+  background: #fff;
+  text-shadow: -2px 2px 10px rgb(31 61 166 / 30%), 1px -1px 1px rgb(255 255 255 / 50%);
+}
+div.case:nth-child(even){
+  background: var(--ligh-blue);
+}
+#choosePlayer{
+  display: grid;
+  grid-template: 1fr / 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  justify-items: center;
+  padding: 50px 0px;
+}
+#choosePlayer form{
+  background: #fff;
+  padding: 30px;
+  box-shadow: 0px 2px 10px -4px rgba(31, 61, 166, .6);
+  border-radius: 10px;
+  /* border: 1px solid var(--library-blue); */
+}
+#choosePlayer h4{
+  text-align: center;
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: 1.5em;
+  letter-spacing: 0.2em;
+  background: #fff;
+  text-shadow: 0px 0px 5px rgba(10, 22, 65, .2);
+}
+#choosePlayer input[type=text]{
+  background: #fff;
+  border: none;
+  font-size: 1.2em;
+  font-weight: 400;
+  padding: 5px 15px;
+  border-radius: 5px;
+  border: 1px solid var(--pastel-blue);
+}
+#choosePlayer input[type=submit], button{
+  background: #2A59FD;
+  font-size: 1.2em;
+  color: #fff;
+  font-weight: 600;
+  padding: 5px 15px;
+  border: none;
+  border-radius: 5px;
+}
+.start-control{
+  margin: 50px;
+  padding: 30px;
+  background: #fff;
+  box-shadow: 0px 2px 10px -4px rgba(31, 61, 166, .6);
+  border-radius: 10px;
+  opacity: 1;
+  transition: all ease-in-out .3s;
+}
+#playersInformations, #playersInformations > p, #startGame{
+  background: #fff;
+}
+#playersInformations{
+  display: grid;
+  grid-template: 1fr / 1fr 1fr;
+  justify-content: center;
+}
+#winnerBoard{
+  position: absolute;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    background: #02081e29;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    animation: showOpacity .4s ease-in-out;
+}
+#winnerBoard p{
+  font-size: 1.5em;
+  font-weight: 700;
+  background: transparent;
+  color: #fff;
+}
+@keyframes showOpacity {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
