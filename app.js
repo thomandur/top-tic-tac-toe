@@ -8,14 +8,13 @@ const GameBoard = (function() {
       _newGameBoard[i] = '';
       DomEl.createSquare(i);
     }
-    console.log('Gameboard init : ', _newGameBoard);
     return 'Gameboard initialisée';
   }
   
   const fillCell = (index) => {
     if (Player.getCurrentPlayer() === undefined || Game.asWinner() === true) {
-      alert('Aucun joueur');
-    } else if (!_newGameBoard[index] || !Game.asWinner()){
+      alert('Partie terminée');
+    } else if (_newGameBoard[index] === ''|| Game.asWinner() === false){
       _newGameBoard[index] = Player.getCurrentPlayer();
       this._casesFilled = _newGameBoard.filter(x => x !== '').length;
       Player.casePlay(index);
@@ -24,7 +23,7 @@ const GameBoard = (function() {
       Game.playerTurn();
       
       if(this._casesFilled === 9){
-        Game.endGame();
+        DomEl.winner();
       }
     } 
   }
@@ -45,7 +44,6 @@ const Player = (function() {
   const _player = {
     name: '',
     marker: '',
-    score: 0,
     cases: []
   }
   const _players = [];
@@ -53,23 +51,21 @@ const Player = (function() {
 
   //Create player
   const createPlayer = (name, marker) => {
-    if(getPlayers.length < 2){ // verify the numbers of players
+    if(_players.length !== 2){ // verify the numbers of players
       _player.name = name;
       _player.marker = marker;
-
-      _players.push({ 'name': name, 'marker': marker, 'score': 0, 'cases': []});
+      
+      _players.push({ 'name': name, 'marker': marker, 'cases': []});
       DomEl.renderPlayer(_player);
-
-      _player.id++;
-    }else{
+    }else if(_players.length === 2){
       // Do something when the amount of player is ok
-      console.log('Pas de nouveau joueur possible');
+      alert('Pas de nouveau joueur possible');
     }
   };
 
   const getPlayer = (marker) => {
     let player = _players.find(el => el.marker === marker);
-    return player ? player : 'Le joueur éxiste pas';
+    return player ? player : false;
   }
 
   const casePlay = (index) => {
@@ -119,7 +115,6 @@ const Game = (function(){
       if(playerCases.find(el => el === v0) !== undefined && playerCases.find(el => el === v1) !== undefined && playerCases.find(el => el === v2) !== undefined){
         this._winner = true;
         DomEl.winner(currentPlayer);
-        endGame(currentPlayer);
       }
     }
   }
@@ -140,20 +135,11 @@ const Game = (function(){
 
   const asWinner = () =>  this._winner;
 
-  const endGame = (winner) => {
-    if(winner){
-      // this._winner = true;
-      console.log('winner :', Player.getPlayer(winner).name);
-    }else{
-      console.log('Terminé, ex aequo');
-    }
-  }
   return{
     gameReady: gameReady,
     startGame: startGame,
     playerTurn: playerTurn,
     checkWin: checkWin,
-    endGame: endGame,
     asWinner: asWinner
   }
 })();
@@ -208,13 +194,21 @@ const DomEl = (function() {
   }
 
   const playerBoard = (data) => {
-    console.log(data);
     _playersInformations.innerHTML += `<p class="player">${data.name} - (${data.marker}) </p>`;
   };
 
   const winner = (marker) => {
-    _winnerBoard.innerHTML = `<p>${Player.getPlayer(marker).name} a gagné la partie</p>`;
-    _winnerBoard.style.display = 'flex';
+    let player = Player.getPlayer(marker);
+    if(player != false){
+      let restartBtn = document.createElement('button');
+      restartBtn.innerHTML = "Restart";
+      _winnerBoard.innerHTML = `<p>${Player.getPlayer(marker).name} a gagné la partie</p>`;
+      _winnerBoard.style.display = 'flex';
+      _winnerBoard.appendChild(restartBtn);
+    }else{
+      _winnerBoard.innerHTML = `<p>Ex aequo</p>`;
+      _winnerBoard.style.display = 'flex';
+    }
   }
 
   return{
@@ -230,39 +224,7 @@ const DomEl = (function() {
   };
 })();
 
-const events = (function() {
-  const events = {};
-
-  const on = (eventName, fn) => {
-    this.events[eventName] = this.events[eventName] || [];
-    this.events[eventName].push(fn);
-  }
-  const off = (eventName, fn) => {
-    if (this.events[eventName]) {
-      for (var i = 0; i < this.events[eventName].length; i++) {
-        if (this.events[eventName][i] === fn) {
-          this.events[eventName].splice(i, 1);
-          break;
-        }
-      };
-    }
-  }
-  const emit = (eventName, data) => {
-    if (this.events[eventName]) {
-      this.events[eventName].forEach(function(fn) {
-        fn(data);
-      });
-    }
-  }
-  return {
-    on: on,
-    off: off,
-    emit: emit
-  }
-})();
-
 const DomEvent = (function() {
-  // Création des players
   DomEl.formsListener(1).addEventListener('submit', (e) => {
     e.preventDefault;
     e.stopImmediatePropagation;
